@@ -69,6 +69,30 @@ def get_playlist(playlist_id: str):
 
     return results
 
+@app.get("/playlist/{playlist_id}/duplicates")
+def find_duplicates(playlist_id: str):
+    playlist_data = spotify_client.playlist_items(playlist_id)
 
+    seen = set()
+    duplicates = []
+
+    for item in playlist_data["items"]:
+        track = item.get("item")
+
+        if not track:
+            continue
+
+        song_key = (track.get("name"), track["artists"][0]["name"])
+        if song_key in seen:
+            duplicates.append({
+                "track_name": track.get("name"),
+                "artist": track["artists"][0]["name"],
+                # "album": track["album"]["name"],
+                # "track_id": track.get("id")
+            })
+        else:
+            seen.add(song_key)
+    
+    return duplicates
     # return results
     

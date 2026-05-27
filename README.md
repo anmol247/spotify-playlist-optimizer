@@ -8,7 +8,12 @@ A FastAPI + Spotipy project that analyzes and optimizes Spotify playlists using 
 - Playlist analysis
 - Audio feature optimization
 
+## Endpoints
+- /
+- /callback
+- /playlist/{playlist_id}
+
 ## Tech Stack
-- Python
 - FastAPI
 - Spotipy
+- Python
