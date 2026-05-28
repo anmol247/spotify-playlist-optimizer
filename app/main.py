@@ -94,5 +94,94 @@ def find_duplicates(playlist_id: str):
             seen.add(song_key)
     
     return duplicates
-    # return results
+
+# @app.get("/playlist/{playlist_id}/audio-features")
+# def get_audio_features(playlist_id: str):
+
+#     if spotify_client is None:
+#         return {"error": "Please login again"}
+
+#     playlist_data = spotify_client.playlist_items(playlist_id)
+
+#     track_ids = []
+
+#     for item in playlist_data["items"]:
+
+#         track = item.get("item")
+
+#         if not track:
+#             continue
+
+#         track_id = track.get("id")
+
+#         if track_id:
+#             track_ids.append(track_id)
+
+#     # audio_features = spotify_client.audio_features(track_ids)
+#     # print(audio_features)
+#     try:
+#         audio_features = spotify_client.audio_features(track_ids)
+
+#     except Exception as e:
+#         return {"error": str(e)}
+
+#     results = []
+
+#     for item, features in zip(playlist_data["items"], audio_features):
+
+#         track = item.get("item")
+
+#         if not track or not features:
+#             continue
+
+#         results.append({
+#             "track_name": track.get("name"),
+#             "artist": track["artists"][0]["name"],
+#             "energy": features.get("energy"),
+#             "danceability": features.get("danceability"),
+#             "tempo": features.get("tempo"),
+#             "valence": features.get("valence")
+#         })
+
+#     return results
+@app.get("/playlist/{playlist_id}/stats")
+def playlist_stats(playlist_id: str):
+
+    if spotify_client is None:
+        return {"error": "Login Again"}
+    
+    playlist_data = spotify_client.playlist_items(playlist_id)
+
+    total_tracks = 0
+    total_duration_ms = 0
+    artists_count = {}
+
+    for item in playlist_data["items"]:
+
+        track = item.get("item")
+
+        if not track:
+            continue
+
+        total_tracks += 1
+        total_duration_ms += track.get("duration_ms", 0)
+
+        artist_name = track["artists"][0]["name"]
+        artists_count[artist_name] = artists_count.get(artist_name, 0) + 1
+
+    top_artist = sorted(artists_count.items(), key=lambda x: x[1], reverse=True)
+
+    formatted_artists = []
+    for artist, count in top_artist:
+        formatted_artists.append({
+            "artist": artist,
+            "count": count
+        })
+    return {
+        "total_tracks": total_tracks,
+        "total_duration_ms": round(total_duration_ms / 60000, 2),
+        "average_song_length_seconds": round((total_duration_ms / total_tracks) / 1000, 2),
+        "top_artists": formatted_artists
+    }
+
     
