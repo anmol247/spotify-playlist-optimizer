@@ -184,4 +184,63 @@ def playlist_stats(playlist_id: str):
         "top_artists": formatted_artists
     }
 
+# @app.get("/playlist/{playlist_id}/hidden-gems")
+# def hidden_gems(playlist_id: str):
+
+#     if spotify_client is None:
+#         return {'error': "Login Again"}
+    
+#     playlist_data = spotify_client.playlist_items(playlist_id)
+#     existing_tracks = set()
+
+#     artist_map = {}
+#     for item in playlist_data["items"]:
+#         track = item.get("item")
+        
+#         if not track:
+#             continue
+
+#         track_id = track.get("id")
+#         if track_id:     
+#             existing_tracks.add(track_id)
+
+#         artist = track["artists"][0]
+
+#         artist_map[artist["id"]] = artist["name"]
+
+#     print(f"Existing tracks count: {len(existing_tracks)}")
+#     print(f"Unique artists count: {len(artist_map)}")
+#     print(artist_map)
+#     results = []
+#     for artist_id, artist_name in artist_map.items():
+
+#         try:
+#             top_tracks_response = spotify_client.artist_top_tracks(artist_id)
+#             print(f"\nArtist: {artist_name}")
+#             print(f"Artist ID: {artist_id}")
+#             print(top_tracks_response)
+
+
+#             suggestions = []
+
+#             for track in top_tracks_response["tracks"]:
+#                 if track["id"] in existing_tracks:
+#                     continue
+#                 suggestions.append({
+#                     "track_name": track.get("name"),
+#                     "album": track["album"]["name"]
+#                 })
+#             if suggestions:
+#                 results.append({
+#                     "artist": artist_name,
+#                     "suggestions": suggestions[:3]
+#                 })
+#         except Exception as e:
+#             print(f"Error processing {artist_name}: {e}")
+
+#     return results
+
+#API depricated.
+
+
     
